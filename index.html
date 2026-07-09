@@ -62,34 +62,37 @@
   .instruction{margin:0 0 12px;font-size:12px;color:var(--muted);line-height:1.6;}
 
   .grid-picker{
-    width:min(86vw,360px);
+    width:min(94vw,420px);
     aspect-ratio:1;
     margin:0 auto;
     display:grid;
     grid-template-columns:repeat(3,1fr);
     grid-template-rows:repeat(3,1fr);
-    gap:10px;
+    gap:8px;
   }
-  .g-cell{display:flex;align-items:center;justify-content:center;}
+  .g-cell{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;}
   .wm-btn{
     width:100%;height:100%;
-    border:0;
+    min-width:56px;min-height:56px;
+    border:2px solid rgba(255,255,255,.16);
+    border-radius:18px;
     display:flex;
     align-items:center;
     justify-content:center;
     color:#17131d;
-    font-size:clamp(22px,7vw,30px);
-    font-weight:900;
+    font-size:clamp(28px,8.5vw,38px);
+    font-weight:1000;
     cursor:pointer;
-    box-shadow:0 8px 18px rgba(0,0,0,.28);
-    transition:transform .1s ease, filter .1s ease;
+    touch-action:manipulation;
+    box-shadow:0 8px 18px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.18);
+    transition:transform .1s ease, filter .1s ease, box-shadow .1s ease;
   }
-  .wm-btn.circle{border-radius:50%;}
-  .wm-btn.square{border-radius:16px;transform:rotate(45deg) scale(.68);}
-  .wm-btn.square span{transform:rotate(-45deg);}
-  .wm-btn:active{filter:brightness(1.12);}
-  .wm-btn.circle:active{transform:scale(.93);}
-  .wm-btn.square:active{transform:rotate(45deg) scale(.61);}
+  .wm-btn span{pointer-events:none;}
+  .wm-btn:active{
+    transform:scale(.94);
+    filter:brightness(1.12);
+    box-shadow:0 4px 10px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.18);
+  }
 
   .tip{text-align:center;color:#645d75;font-size:10px;margin-top:14px;}
 
@@ -164,13 +167,21 @@
   .change-btn:active{transform:scale(.97);}
 
   .num-dot{animation:pop .26s cubic-bezier(.2,1.25,.3,1) both;transform-origin:center;transform-box:fill-box;}
-  .num-dot circle{fill:#171321;stroke:#d8ccff;stroke-width:3;}
+  .num-dot circle{
+    fill:#ffffff;
+    stroke:#8f74ff;
+    stroke-width:5;
+    filter:drop-shadow(0 0 7px rgba(143,116,255,.8)) drop-shadow(0 3px 3px rgba(0,0,0,.65));
+  }
   .num-dot text{
-    fill:#fff;
+    fill:#100d18;
+    stroke:#100d18;
+    stroke-width:.35;
+    paint-order:stroke fill;
     text-anchor:middle;
     dominant-baseline:central;
-    font-size:24px;
-    font-weight:900;
+    font-size:29px;
+    font-weight:1000;
     pointer-events:none;
   }
   @keyframes pop{from{opacity:0;transform:scale(.45)}to{opacity:1;transform:scale(1)}}
@@ -206,10 +217,10 @@
 
     <div class="grid-picker" id="gridPicker">
       <div class="g-cell"><button class="wm-btn square" data-key="1" type="button"><span>1</span></button></div>
-      <div class="g-cell"><button class="wm-btn circle" data-key="A" type="button"><span>A</span></button></div>
+      <div class="g-cell"><button class="wm-btn square" data-key="A" type="button"><span>A</span></button></div>
       <div class="g-cell"><button class="wm-btn square" data-key="2" type="button"><span>2</span></button></div>
 
-      <div class="g-cell"><button class="wm-btn circle" data-key="D" type="button"><span>D</span></button></div>
+      <div class="g-cell"><button class="wm-btn square" data-key="D" type="button"><span>D</span></button></div>
       <div class="g-cell">
         <button class="center-toggle" id="centerRotationToggle" type="button" aria-label="回転方向を切り替える">
           <span class="center-arrow" id="centerArrow">↻</span>
@@ -217,10 +228,10 @@
           <small>タップで切替</small>
         </button>
       </div>
-      <div class="g-cell"><button class="wm-btn circle" data-key="B" type="button"><span>B</span></button></div>
+      <div class="g-cell"><button class="wm-btn square" data-key="B" type="button"><span>B</span></button></div>
 
       <div class="g-cell"><button class="wm-btn square" data-key="4" type="button"><span>4</span></button></div>
-      <div class="g-cell"><button class="wm-btn circle" data-key="C" type="button"><span>C</span></button></div>
+      <div class="g-cell"><button class="wm-btn square" data-key="C" type="button"><span>C</span></button></div>
       <div class="g-cell"><button class="wm-btn square" data-key="3" type="button"><span>3</span></button></div>
     </div>
     <div class="tip">表示中は右上の × または「選び直す」で戻れます</div>
@@ -270,12 +281,12 @@
 const TRUE_ANGLE = { A:0, '2':45, B:90, '3':135, C:180, '4':225, D:270, '1':315 };
 const WAYMARK_ORDER = ['A','2','B','3','C','4','D','1'];
 const WAYMARK_SHAPE = { A:'circle', B:'circle', C:'circle', D:'circle', '1':'square', '2':'square', '3':'square', '4':'square' };
-const WAYMARK_COLOR = { A:'#e8c34a', '1':'#e8c34a', B:'#e2554f', '2':'#e2554f', C:'#4fa3e8', '3':'#4fa3e8', D:'#a15fe0', '4':'#a15fe0' };
+const WAYMARK_COLOR = { A:'#ef5350', '1':'#ef5350', B:'#f2c94c', '2':'#f2c94c', C:'#4fa3e8', '3':'#4fa3e8', D:'#a15fe0', '4':'#a15fe0' };
 
 const GROUP1_PATTERN = [[337.5,'①'],[22.5,'⑧'],[292.5,'②'],[67.5,'⑦'],[247.5,'③'],[112.5,'⑥'],[202.5,'④'],[157.5,'⑤']];
 const GROUP2_PATTERN = [[337.5,'⑧'],[22.5,'①'],[292.5,'⑦'],[67.5,'②'],[247.5,'⑥'],[112.5,'③'],[202.5,'⑤'],[157.5,'④']];
 
-const CX = 200, CY = 200, RING_R = 143, NUM_R = 105;
+const CX = 200, CY = 200, RING_R = 143, NUM_R = 103;
 let currentGroup = 1;
 let currentKey = null;
 
@@ -328,6 +339,8 @@ function renderWaymarks(){
   });
 }
 
+const POSITION_NUMBER = {'①':'1','②':'2','③':'3','④':'4','⑤':'5','⑥':'6','⑦':'7','⑧':'8'};
+
 function renderNumbers(){
   numbersG.innerHTML = '';
   if(!currentKey) return;
@@ -337,9 +350,9 @@ function renderNumbers(){
     const g = svgEl('g', { class:'num-dot' });
     g.style.animationDelay = `${i * 22}ms`;
 
-    g.appendChild(svgEl('circle', { cx:p.x, cy:p.y, r:18 }));
+    g.appendChild(svgEl('circle', { cx:p.x, cy:p.y, r:23 }));
     const t = svgEl('text', { x:p.x, y:p.y + 1 });
-    t.textContent = label;
+    t.textContent = POSITION_NUMBER[label] || label;
     g.appendChild(t);
     numbersG.appendChild(g);
   });
